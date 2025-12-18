@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Math Score</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-title {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .col {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.3s;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .results-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    margin-top: 20px;
+    /* No display property here - let HTML control it */
+}
+        
+        .results-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .predicted-score {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .score-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-box li {
+            padding: 5px 0;
+            color: #666;
+        }
+        
+        .info-box li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .footer {
+            text-align: center;
+            color: #666;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .predicted-score {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-link">← Back to Home</a>
+            <h1>Math Score Predictor</h1>
+            <p>Fill in student details to predict math performance</p>
+        </div>
+        
+        <div class="card">
+            <h2 class="form-title">Student Information</h2>
+            
+            <form action="/predictdata" method="POST">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select class="form-control" id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="race_ethnicity">Race/Ethnicity</label>
+                            <select class="form-control" id="race_ethnicity" name="race_ethnicity" required>
+                                <option value="">Select Group</option>
+                                <option value="group A">Group A</option>
+                                <option value="group B">Group B</option>
+                                <option value="group C">Group C</option>
+                                <option value="group D">Group D</option>
+                                <option value="group E">Group E</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="parental_level_of_education">Parent's Education</label>
+                            <select class="form-control" id="parental_level_of_education" name="parental_level_of_education" required>
+                                <option value="">Select Education Level</option>
+                                <option value="high school">High School</option>
+                                <option value="some high school">Some High School</option>
+                                <option value="some college">Some College</option>
+                                <option value="associate's degree">Associate's Degree</option>
+                                <option value="bachelor's degree">Bachelor's Degree</option>
+                                <option value="master's degree">Master's Degree</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="lunch">Lunch Type</label>
+                            <select class="form-control" id="lunch" name="lunch" required>
+                                <option value="">Select Lunch Type</option>
+                                <option value="standard">Standard</option>
+                                <option value="free/reduced">Free/Reduced</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="test_preparation_course">Test Preparation</label>
+                            <select class="form-control" id="test_preparation_course" name="test_preparation_course" required>
+                                <option value="">Select Preparation</option>
+                                <option value="none">None</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="form-title" style="margin-top: 30px;">Academic Scores</h2>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="reading_score">Reading Score (0-100)</label>
+                            <input type="number" class="form-control" id="reading_score" name="reading_score" 
+                                   min="0" max="100" step="1" placeholder="Enter score" required>
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="writing_score">Writing Score (0-100)</label>
+                            <input type="number" class="form-control" id="writing_score" name="writing_score" 
+                                   min="0" max="100" step="1" placeholder="Enter score" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    Predict Math Score
+                </button>
+            </form>
+            
+            <!-- Results Section -->
+            {% if results %}
+            <div class="results-card" id="results">
+                <h2 class="results-title">Prediction Results</h2>
+                <div class="predicted-score">{{ "%.1f"|format(results|float) }}</div>
+                <p class="score-message">Predicted Mathematics Score</p>
+                
+                {% set score = results|float %}
+                <p class="score-message">
+                    {% if score >= 90 %}
+                    🎯 Excellent Performance
+                    {% elif score >= 80 %}
+                    👍 Good Performance  
+                    {% elif score >= 70 %}
+                    📊 Average Performance
+                    {% elif score >= 60 %}
+                    ⚠️ Needs Improvement
+                    {% else %}
+                    ❗ Requires Support
+                    {% endif %}
+                </p>
+            </div>
+            {% endif %}
+            
+            <!-- Information Box -->
+            <div class="info-box">
+                <h3>About This Prediction</h3>
+                <ul>
+                    <li>Based on machine learning model trained on student data</li>
+                    <li>Considers multiple factors affecting academic performance</li>
+                    <li>Scores are predicted on a scale of 0-100</li>
+                    <li>Results should be used as guidance</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Student Performance Predictor</p>
+        </div>
+    </div>
+    
+    <script>
+        // Simple form validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            
+            form.addEventListener('submit', function(e) {
+                const inputs = form.querySelectorAll('select[required], input[required]');
+                let isValid = true;
+                
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.style.borderColor = '#ff6b6b';
+                    } else {
+                        input.style.borderColor = '#ddd';
+                    }
+                });
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields.');
+                }
+            });
+            
+            // Scroll to results if they exist
+            // {% if results %}
+            // setTimeout(function() {
+            //     const resultsDiv = document.getElementById('results');
+            //     if (resultsDiv) {
+            //         resultsDiv.scrollIntoView({ behavior: 'smooth' });
+            //     }
+            // }, 100);
+            // {% endif %}
+        });
+    </script>
+</body>
+</html>
